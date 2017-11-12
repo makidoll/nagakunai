@@ -2,9 +2,9 @@
 	"name": "nagakunai",
 	"version": "1.0.0",
 	"description": "Open-source, free, quick, secure, private, disposable chat rooms.",
-	"main": "index.js",
+	"main": "app.js",
 	"scripts": {
-		"start": "node index.js"
+		"start": "node app.js"
 	},
 	"author": "Maki",
 	"license": "MIT",
