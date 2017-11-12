@@ -27,7 +27,7 @@
 			}
 
 			.logo {
-				margin: 25px;
+				padding: 25px 25px 0 25px;
 			}
 
 			#name {
@@ -36,7 +36,6 @@
 				background-color: transparent;
 				text-align: center;
 				padding: 0;
-				font-weight: 700;
 				margin-bottom: 0;
 				line-height: 20px;
 				font-family: "Archivo", sans-serif;
@@ -91,16 +90,16 @@
 				color: rgba(255,255,255,0.4);
 			}
 
-			#colour {
+			#color {
 				position: fixed; margin: auto;
 				left: 0; bottom: 0;
 				width: 150px; height: 50px;
-				background-color: #;
 			}
 
-			#colour p {
+			#color p {
 				color: #fff;
 				margin-top: 16px;
+				opacity: 0.6;
 			}
 
 			#title {
@@ -112,52 +111,72 @@
 				text-align: right;
 				line-height: 48px;
 				opacity: 0.1;
+				font-family: "Archivo", sans-serif;
+				font-weight: 400;
+				z-index: -100;
 			}
 
 		</style>
 	</head>
 	<body>
 		<div id="sidebar">
-			<a href="/"><svg class="logo" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-0.5 -0.5 11 11" width="100" height="100"><path fill="none" stroke="#000" stroke-width="0" stroke-linecap="square" d="M0,10 A5,5,0 0,1 5,5 L5,10 M0,3 L10,3 M5,3 A5,5,0 0,1 10,8 L10,10 M5,3 L5,0"><animate attributeName="stroke-width" from="0" to="1" dur="1s" fill="freeze" begin="0.2s"/></path></svg></a>
-			<input type="text" id="name" placeholder="Name" autocomplete="off">
+			<a href="/" style="display: block;"><svg class="logo" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-0.5 -0.5 11 11" width="100" height="100"><path fill="none" stroke="#000" stroke-width="0" stroke-linecap="square" d="M0,10 A5,5,0 0,1 5,5 L5,10 M0,3 L10,3 M5,3 A5,5,0 0,1 10,8 L10,10 M5,3 L5,0"><animate attributeName="stroke-width" from="0" to="1" dur="1s" fill="freeze" begin="0.2s"/></path></svg></a>
+			<div style="margin-top: 25px"></div>
+			<input type="text" id="name" autocomplete="off">
 			<p id="users"></p>
-			<div id="colour">
-				<p>Colour</p>
+			<div id="color">
+				<p>color</p>
 			</div>
 		</div>
 		<div id="chat">
-			<table id="chat_table"></table>
+			<table id="chat_table"><tbody></tbody></table>
 			<h1 id="title">niceee</h1>
 		</div>
 		<div id="input">
 			<input type="text" autocomplete="off" id="chat_box">
 		</div>
-		<script type="text/javascript">			
-			// Display
+		<script src="socket.io.js"></script>
+		<script type="text/javascript">		
+			var socket = io();
+
+			// ---------
+			//  Display
+			// ---------
+
 			setTimeout(function() {
 				document.querySelector("body").style.opacity = "1";
 			}, 200);
 
 			var get = window.location.search.substr(1).split("&");
+			var id = "";
 			get.forEach(function(e, i) {
 				let param = e.split("=");
-				if (param[0] == "room") document.title = "Nagakunai - "+param[1]; 
-				document.getElementById("title").innerHTML = param[1];
+				id = param[1];
+				let id_b = param[1]
+					.replace(/%20/gi, " ")
+					.replace(/%22/gi, '"')
+					.replace(/%27/gi, "'")
+
+				if (param[0] == "room") document.title = "Nagakunai - "+id; 
+				document.getElementById("title").innerHTML = id;
 				return;
 			})
 
-			// Chatting
+			// ----------
+			//  Chatting
+			// ----------
+
 			function safe(msg) {
 				return msg.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
 					return "&#"+i.charCodeAt(0)+";";
 				});
 			}
 
-			var table = document.getElementById("chat_table");
-			function message(time, colour, name, message) {
+			var table = document.querySelector("#chat_table > tbody");
+			function message(time, color, name, message) {
 				table.innerHTML += 
 					'<tr><td><span class="time">'+safe(time)+
-					'</span> <span class="name" style="color:'+safe(colour)+
+					'</span> <span class="name" style="color:'+safe(color)+
 					';">'+safe(name)+
 					'</span>: '+safe(message)+
 					'</td></tr>';
@@ -165,27 +184,74 @@
 				document.getElementById("chat").scrollTo(0, table.offsetHeight);
 			}
 
+			// ------
+			//  User
+			// ------
+
 			var pico8 = [
-				"#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F", "#FF004D", "#FFA300", "#FFEC27", "#00E436", "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"
+				"#FF004D", "#FFA300", "#FFEC27", "#00E436", "#29ADFF", "#83769C", "#FF77A8"
 			];
 
-			// User
+			function gen() {
+				let dick = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+				let tionary = dick.split("")[Math.floor(Math.random()*dick.length)];
+				return tionary;
+			}
+
 			var user = {
+				id: gen()+gen()+gen()+gen()+gen()+gen()+gen()+gen(),
 				name: "Anoncat",
-				colour: ""
+				color: ""
 			};
 
+			document.getElementById("name").value = user.name;
 			document.getElementById("name").addEventListener("change", function(e) {
-				user.name = document.getElementById("name").value;
+				let name = document.getElementById("name").value;
+				user.name = (name) ? document.getElementById("name").value : "Anoncat";
+				updateUser();
 			});
 
-			user.colour = document.getElementById("colour").style.backgroundColor = pico8[Math.floor(Math.random()*pico8.length)]
+			user.color = document.getElementById("color").style.backgroundColor = pico8[Math.floor(Math.random()*pico8.length)]
 
-			// Socket.io
+			// -----------
+			//  Socket.io
+			// -----------
+
+			function updateUser() {
+				socket.emit(id+"-user", {
+					id: user.id,
+					name: user.name,
+					color: user.color
+				});
+				document.getElementById("name").style.color = user.color;
+			}
+
+			socket.emit("room", id);
+			updateUser();
+
+			socket.on(id+"-user", function(data) {
+				document.getElementById("users").innerHTML = "";
+				Object.keys(data).forEach(function(e) {
+					if (e == user.id) return;
+					document.getElementById("users").innerHTML += "<span style='color: "+safe(data[e].color)+"'>"+safe(data[e].name)+"</span><br>";
+				});
+			});
+
+			socket.on(id+"-message", function(data) {
+				message(data.time, data.color, data.name, data.message);
+			});
+
 			document.getElementById("chat_box").focus();
-			document.getElementById("chat_box").addEventListener("keyup", function(e) {
+			document.getElementById("chat_box").addEventListener("keydown", function(e) {
 				if (e.keyCode == 13) {
 					let message = document.getElementById("chat_box").value;
+					document.getElementById("chat_box").value = "";
+					socket.emit(id+"-message", {
+						time: "00:00",
+						color: user.color,
+						name: user.name,
+						message: message
+					});
 				}
 			});
 		</script>

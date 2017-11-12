@@ -6,7 +6,4 @@ global.log = function(msg) {
 }
 
 var express = require(global.DIR+"/lib/express");
-var sockets = require(global.DIR+"/lib/sockets");
-
 express.start();
-//sockets.start();
