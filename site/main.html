@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Nagakunai</title>
+		<link href="https://fonts.googleapis.com/css?family=Archivo:400,700" rel="stylesheet">
+		<style type="text/css">
+			body {
+				font-family: "Archivo", sans-serif;
+				background-color: #000;
+				color: #fff;
+				opacity: 0;
+			}
+
+			* {
+				transition: opacity;
+				transition-duration: 400ms;
+				transition-timing-function: linear;
+			}
+
+			#content {
+				position: fixed; margin: auto;
+				top: 0; left: 0; right: 0; bottom: 0;
+				width: 280px; height: 360px;
+				text-align: center;
+			}
+
+			.title {
+				font-weight: 700;
+				font-size: 48px;
+			}
+
+			.logo {
+				width: 150px;
+				height: 150px;
+			}
+
+			.subtitle {
+				margin-top: -24px;
+			}
+
+			#room_id {
+				padding: 12px 18px;
+				text-align: right;
+				width: 220px;
+				border: solid 2px rgba(255,255,255,0.4);
+				background-color: transparent;
+				border-radius: 64px;
+				color: #fff;
+				font-family: "Archivo", sans-serif;
+				font-size: 16px;
+			}
+
+			input:focus {
+				outline: none;
+			}
+
+			input::placeholder {
+				color: rgba(255,255,255,0.4);
+				text-align: left;
+			}
+
+			.maki {
+				position: fixed; margin: auto;
+				bottom: 20px; left: 20px; right: 0;
+				height: 18px;
+				opacity: 0.2;			
+			}
+
+			.maki p {
+				margin: 0;
+			}
+
+			a,a:link,a:hover,a:active {
+				color: #fff;
+				text-decoration: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="content">	
+			<svg class="logo" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-0.5 -0.5 11 11" width="150" height="150"><path fill="none" stroke="#ffffff" stroke-width="0" stroke-linecap="square" d="M0,10 A5,5,0 0,1 5,5 L5,10 M0,3 L10,3 M5,3 A5,5,0 0,1 10,8 L10,10 M5,3 L5,0"><animate attributeName="stroke-width" from="0" to="1" dur="1s" fill="freeze" begin="0.2s"/></path></svg>
+			<h1 class="title">Nagakunai</h1>
+			<p class="subtitle">Open-source, free, quick, secure, private, disposable chat rooms.</p><br>
+			<input type="text" placeholder="Room ID" id="room_id" autocomplete="off">
+		</div>
+		<div class="maki">
+			<p>made by <a href="https://maki.cat" style="font-weight: 700;" target="_blank">Maki</a></p>
+		</div>
+		<script type="text/javascript">
+			setTimeout(function() {
+				document.querySelector("body").style.opacity = "1";
+			}, 200);
+
+			document.getElementById("room_id").focus();
+			document.getElementById("room_id").addEventListener("keyup", function(e) {
+				if (e.keyCode == 13) {
+					document.location = "/chat?room="+document.getElementById("room_id").value;
+				}
+			});
+		</script>
+	</body>
+</html>

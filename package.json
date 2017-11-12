@@ -1,0 +1,15 @@
+{
+	"name": "nagakunai",
+	"version": "1.0.0",
+	"description": "Open-source, free, quick, secure, private, disposable chat rooms.",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js"
+	},
+	"author": "Maki",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.16.2",
+		"socket.io": "^2.0.4"
+	}
+}

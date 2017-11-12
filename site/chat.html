@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Nagakunai</title>
+		<link href="https://fonts.googleapis.com/css?family=Archivo:400,700|Roboto+Mono" rel="stylesheet">
+		<style type="text/css">
+			body {
+				font-family: "Archivo";
+				background-color: #000;
+				color: #fff;
+				opacity: 0;
+			}
+
+			* {
+				transition: opacity;
+				transition-duration: 400ms;
+				transition-timing-function: linear;
+			}
+
+			#sidebar {
+				position: fixed;  margin: auto;
+				top: 0; left: 0; bottom: 0;
+				width: 150px; padding: 0;
+				background-color: #fff;
+				color: #000;
+				text-align: center;
+			}
+
+			.logo {
+				margin: 25px;
+			}
+
+			#name {
+				width: 100%;
+				border: none;
+				background-color: transparent;
+				text-align: center;
+				padding: 0;
+				font-weight: 700;
+				margin-bottom: 0;
+				line-height: 20px;
+				font-family: "Archivo", sans-serif;
+				font-size: 16px;
+			}
+
+			input:focus {
+				outline: none;
+			}
+
+			#name::placeholder {
+				color: rgba(0,0,0,0.4);
+			}
+
+			#users {
+				margin-top: 0;
+				line-height: 20px;
+			}
+
+			#input {
+				position: fixed; margin: auto;
+				left: 150px; bottom: 0; right: 0;
+				height: 50px;
+				background-color: rgba(255,255,255,0.1);
+			}
+
+			#input input {
+				width: calc(100% - 48px);
+				height: calc(100% - 16px);
+				border: none;
+				padding: 8px 24px;
+				background-color: transparent;
+				color: #fff;
+				font-family: "Roboto Mono", monospace;
+				font-size: 14px;
+			}
+
+			#chat {
+				position: fixed; margin: auto;
+				top: 0; left: 150px; right: 0; bottom: 50px;
+				font-family: "Roboto Mono", monospace;
+				font-size: 14px;
+				padding: 24px;
+				overflow-y: auto;
+			}
+
+			#chat::-webkit-scrollbar {
+				width: 0;
+			}
+
+			.time {
+				color: rgba(255,255,255,0.4);
+			}
+
+			#colour {
+				position: fixed; margin: auto;
+				left: 0; bottom: 0;
+				width: 150px; height: 50px;
+				background-color: #;
+			}
+
+			#colour p {
+				color: #fff;
+				margin-top: 16px;
+			}
+
+			#title {
+				position: fixed; margin: auto;
+				top: 0; right: 0; left: 150px; bottom: 50px;
+				padding: 24px;
+				font-size: 48px;
+				margin: 0;
+				text-align: right;
+				line-height: 48px;
+				opacity: 0.1;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="sidebar">
+			<a href="/"><svg class="logo" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-0.5 -0.5 11 11" width="100" height="100"><path fill="none" stroke="#000" stroke-width="0" stroke-linecap="square" d="M0,10 A5,5,0 0,1 5,5 L5,10 M0,3 L10,3 M5,3 A5,5,0 0,1 10,8 L10,10 M5,3 L5,0"><animate attributeName="stroke-width" from="0" to="1" dur="1s" fill="freeze" begin="0.2s"/></path></svg></a>
+			<input type="text" id="name" placeholder="Name" autocomplete="off">
+			<p id="users"></p>
+			<div id="colour">
+				<p>Colour</p>
+			</div>
+		</div>
+		<div id="chat">
+			<table id="chat_table"></table>
+			<h1 id="title">niceee</h1>
+		</div>
+		<div id="input">
+			<input type="text" autocomplete="off" id="chat_box">
+		</div>
+		<script type="text/javascript">			
+			// Display
+			setTimeout(function() {
+				document.querySelector("body").style.opacity = "1";
+			}, 200);
+
+			var get = window.location.search.substr(1).split("&");
+			get.forEach(function(e, i) {
+				let param = e.split("=");
+				if (param[0] == "room") document.title = "Nagakunai - "+param[1]; 
+				document.getElementById("title").innerHTML = param[1];
+				return;
+			})
+
+			// Chatting
+			function safe(msg) {
+				return msg.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+					return "&#"+i.charCodeAt(0)+";";
+				});
+			}
+
+			var table = document.getElementById("chat_table");
+			function message(time, colour, name, message) {
+				table.innerHTML += 
+					'<tr><td><span class="time">'+safe(time)+
+					'</span> <span class="name" style="color:'+safe(colour)+
+					';">'+safe(name)+
+					'</span>: '+safe(message)+
+					'</td></tr>';
+
+				document.getElementById("chat").scrollTo(0, table.offsetHeight);
+			}
+
+			var pico8 = [
+				"#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F", "#FF004D", "#FFA300", "#FFEC27", "#00E436", "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"
+			];
+
+			// User
+			var user = {
+				name: "Anoncat",
+				colour: ""
+			};
+
+			document.getElementById("name").addEventListener("change", function(e) {
+				user.name = document.getElementById("name").value;
+			});
+
+			user.colour = document.getElementById("colour").style.backgroundColor = pico8[Math.floor(Math.random()*pico8.length)]
+
+			// Socket.io
+			document.getElementById("chat_box").focus();
+			document.getElementById("chat_box").addEventListener("keyup", function(e) {
+				if (e.keyCode == 13) {
+					let message = document.getElementById("chat_box").value;
+				}
+			});
+		</script>
+	</body>
+</html>
