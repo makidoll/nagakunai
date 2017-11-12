@@ -1,7 +1,7 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-0.5 -0.5 11 11" width="150" height="150"><path fill="none" stroke="#000000" stroke-width="0" stroke-linecap="square" d="M0,10 A5,5,0 0,1 5,5 L5,10 M0,3 L10,3 M5,3 A5,5,0 0,1 10,8 L10,10 M5,3 L5,0"><animate attributeName="stroke-width" from="0" to="1" dur="1s" fill="freeze" begin="0.2s"/></path></svg>
+<img height="150" width="150" src="https://raw.githubusercontent.com/makixx/nagakunai/master/assets/logo.png">
 
 # Nagakunai
-> Open-source, free, quick, secure, private, disposable chat rooms.
+> 💬 Open-source, free, quick, not-secure-yet, private, disposable chat rooms.
 
 ## Installation
 
