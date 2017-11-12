@@ -1,4 +1,4 @@
-<img height="100" width="100" src="https://raw.githubusercontent.com/makixx/nagakunai/master/assets/logo.png">
+<img height="100" width="100" src="https://raw.githubusercontent.com/makixx/nagakunai/master/assets/logo_100.png">
 
 # Nagakunai
 > 💬 Open-source, free, quick, not-secure-yet, private, disposable chat rooms.
